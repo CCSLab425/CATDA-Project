@@ -1,2 +1,3 @@
 # CATDA-Project
-The method base on Cross Attention Transformer Domain Adaptation
+Cross Attention Transformer-based Domain Adaptation
+We have published part of the code, the full code will be published after the acceptance of the article.
