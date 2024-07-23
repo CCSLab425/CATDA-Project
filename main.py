@@ -95,24 +95,24 @@ def train(model, optimizer, dataloader_src, dataloader_tar, save_name=''):
             ys_pre, ys_t_pre, yt_pre,  = model(x_src, x_s_t , x_tar)
             src_loss = loss_class(ys_pre, y_src)
             mmd_loss = MMDLoss()
-            DDC_loss = mmd_loss(ys_pre, yt_pre)
-            DDC_loss1= mmd_loss(yt_pre, ys_t_pre)
-            YHMMD_loss = args.gamma1*DDC_loss + args.gamma2*DDC_loss1
+            DDC_loss1 = mmd_loss(ys_pre, ys_t_pre)
+            DDC_loss2= mmd_loss(ys_pre, yt_pre)
+            YHMMD_loss = args.gamma1*DDC_loss1 + args.gamma2*DDC_loss2
             total_loss = src_loss + YHMMD_loss
 
             optimizer.zero_grad()
             total_loss.backward()
             optimizer.step()
-            src_tgt_mmd_loss_per_epoch.append(DDC_loss.item())
+            src_tgt_mmd_loss_per_epoch.append(DDC_loss1.item())
             yhmmd_loss_per_epoch.append(YHMMD_loss.item())
             total_loss_per_epoch.append(total_loss.item())
         src_tgt_mmd_loss_mean = np.mean(src_tgt_mmd_loss_per_epoch)
         yhmmd_loss_mean = np.mean(yhmmd_loss_per_epoch)
         total_loss_mean = np.mean(total_loss_per_epoch)
-        item_pr = 'Epoch: [{}/{}], classify_loss: {:.4f}, DDC_loss: {:.4f}, DDC1_loss: {:.4f},YHMMD_loss: {:.4f},total_loss: {:.4f}'.format(
-            epoch, args.n_epoch, src_loss.item(), DDC_loss.item(),DDC_loss1.item(),YHMMD_loss.item() ,total_loss.item())
+        item_pr = 'Epoch: [{}/{}], classify_loss: {:.4f}, DDC_loss1: {:.4f}, DDC_loss2: {:.4f},YHMMD_loss: {:.4f},total_loss: {:.4f}'.format(
+            epoch, args.n_epoch, src_loss.item(), DDC_loss1.item(),DDC_loss2.item(),YHMMD_loss.item() ,total_loss.item())
         print(item_pr, end=' >>> ')
-
+        
         # test
         src_test_acc, src_test_loss ,tgt_test_acc, tgt_test_loss = test(model, args.dateset_path + args.src_dateset_name , args.dateset_path + args.tgt_dateset_name)
         test_info = 'Source acc: {:.3f} %, Target acc: {:.3f} %'.format(src_test_acc * 100, tgt_test_acc * 100)
@@ -144,10 +144,6 @@ if __name__ == '__main__':
     print(save_name)
     loader_src = dataload(batch_size=args.batch_size, dataset_path=args.dateset_path + args.src_dateset_name)
     loader_tar = dataload(batch_size=args.batch_size, dataset_path=args.dateset_path + args.tgt_dateset_name)
-    #vis = visdom.Visdom()
-    #vis.line([0.], [0.], win='loss', opts=dict(title='src_loss', xlabel='episodes', ylabel='loss'))
-    #vis.line([[0., 0.]], [0.], win='accuracy', opts=dict(title='accuracy', xlabel='episodes', ylabel='accuracy'))
-
     model = SCARA_ViT_model(input_size=32, class_num=args.num_class).to(DEVICE)
     model.to(DEVICE)
     optimizer = optim.Adam(model.parameters(), lr=args.lr)
