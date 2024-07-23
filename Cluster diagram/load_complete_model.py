@@ -1,6 +1,6 @@
 """
-@author：Qitong Chen
-2022.06.28
+@author：Hua Yin
+2024.06
 注意事项：
     加载完整模型进行测试时，需要使用with torch.no_grad():
 """
