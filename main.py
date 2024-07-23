@@ -1,5 +1,5 @@
 """
-Author: Yin Hua
+Author: Yin Hua(CCS Lab)
 """
 
 import numpy as np
@@ -14,12 +14,8 @@ import argparse
 from dataloader import dataload, test_dataload
 from utils_dsbn.save_other_functions import DDC_train_history, save_his
 from MMD.MMD_calculation import MMDLoss
-from MMD.CORAL_calculation import CORAL_loss_fn
 from data import build_loader
 from config import get_config
-from MMD.CORAL_calculation import CORAL_loss_fn
-from MMD.DAN_loss_calculation import DAN_loss_fn
-import visdom
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--num_class', type=int, default=10)    #10or4
