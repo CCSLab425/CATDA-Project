@@ -1,5 +1,5 @@
 """
-@author：Hua Yin
+@author：Yin Hua
 2024.06
 注意事项：
     加载完整模型进行测试时，需要使用with torch.no_grad():
